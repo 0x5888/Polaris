@@ -1,4 +1,5 @@
 import useSWR from "swr";
+import logo from "@/assets/imgs/bian.png";
 
 interface Ad {
   defaultImage: string;
@@ -6,13 +7,9 @@ interface Ad {
 }
 
 export const useAd = () => {
-  const { data } = useSWR("images_ad", () => {
-    return fetch(
-      "https://raw.githubusercontent.com/vectorisvector/images/main/config.json",
-    )
-      .then((res) => res.json())
-      .then((res) => res.ad as Ad);
-  });
 
-  return data;
+  return {
+    "defaultImage": logo,
+    "defaultUrl": "https://www.binance.com/en"
+  };
 };

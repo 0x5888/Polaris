@@ -17,7 +17,7 @@ export default function Ad() {
       <Image
         src={ad.defaultImage}
         alt="ad"
-        fill
+        className="w-full h-full object-cover"
       />
     </Link>
   );

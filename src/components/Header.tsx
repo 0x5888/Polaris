@@ -6,7 +6,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useContext } from "react";
 import logo from "@/assets/imgs/ba.png";
-// import logo from "@/assets/imgs/logo.png";
 import ColorModeContext from "@/contexts/colorModeContext";
 
 export default function Header() {
@@ -15,14 +14,10 @@ export default function Header() {
   const pathname = usePathname();
 
   const nav = [
-    // {
-    //   title: "Home",
-    //   link: "https://binance.com/",
-    // },
     {
       title: "Marketplace",
       link: "https://evm.ink/",
-    },
+    }
 
   ];
 
