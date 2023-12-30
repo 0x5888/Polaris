@@ -29,7 +29,7 @@ import useInterval from "@/hooks/useInterval";
 import { handleAddress, handleLog } from "@/utils/helper";
 
 const example =
-  'data:,{"p":"asc-20","op":"mint","tick":"aval","amt":"100000000"}';
+  'data:,{"p":"bnb-20","op":"mint","tick":"soft","amt":"100"}';
 
 type RadioType = "meToMe" | "manyToOne";
 
@@ -69,20 +69,20 @@ export default function Home() {
           return client.sendTransaction({
             account,
             to: radio === "meToMe" ? account.address : toAddress,
-            value: 0n,
+            value: 1000000000000000n,
             ...(inscription
               ? {
-                  data: stringToHex(inscription),
-                }
+                data: stringToHex(inscription),
+              }
               : {}),
             ...(gas > 0
               ? gasRadio === "all"
                 ? {
-                    gasPrice: parseEther(gas.toString(), "gwei"),
-                  }
+                  gasPrice: parseEther(gas.toString(), "gwei"),
+                }
                 : {
-                    maxPriorityFeePerGas: parseEther(gas.toString(), "gwei"),
-                  }
+                  maxPriorityFeePerGas: parseEther(gas.toString(), "gwei"),
+                }
               : {}),
           });
         }),
@@ -111,13 +111,13 @@ export default function Home() {
 
   const run = useCallback(() => {
     if (privateKeys.length === 0) {
-      pushLog("没有私钥", "error");
+      pushLog("no private key", "error");
       setRunning(false);
       return;
     }
 
     if (radio === "manyToOne" && !toAddress) {
-      pushLog("没有地址", "error");
+      pushLog("No address", "error");
       setRunning(false);
       return;
     }
@@ -134,7 +134,7 @@ export default function Home() {
   return (
     <div className=" flex flex-col gap-4">
       <div className=" flex flex-col gap-2">
-        <span>链（选要打铭文的链）:</span>
+        <span>BNB Smart Chain Mainnet:</span>
         <TextField
           select
           defaultValue="eth"
@@ -157,12 +157,12 @@ export default function Home() {
       </div>
 
       <div className=" flex flex-col gap-2">
-        <span>私钥（必填，每行一个）:</span>
+        <span>Your Private key (required):</span>
         <TextField
           multiline
           minRows={2}
           size="small"
-          placeholder="私钥，带不带 0x 都行，程序会自动处理"
+          placeholder="0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"
           disabled={running}
           onChange={(e) => {
             const text = e.target.value;
@@ -183,7 +183,7 @@ export default function Home() {
         />
       </div>
 
-      <RadioGroup
+      {/* <RadioGroup
         row
         defaultValue="meToMe"
         onChange={(e) => {
@@ -200,32 +200,32 @@ export default function Home() {
         <FormControlLabel
           value="manyToOne"
           control={<Radio />}
-          label="多转一"
+          label="Join Mint"
           disabled={running}
         />
-      </RadioGroup>
+      </RadioGroup> */}
 
-      {radio === "manyToOne" && (
-        <div className=" flex flex-col gap-2">
-          <span>转给谁的地址（必填）:</span>
-          <TextField
-            size="small"
-            placeholder="地址"
-            disabled={running}
-            onChange={(e) => {
-              const text = e.target.value;
-              isAddress(text) && setToAddress(text);
-            }}
-          />
-        </div>
-      )}
 
       <div className=" flex flex-col gap-2">
-        <span>铭文（选填，原始铭文，不是转码后的十六进制）:</span>
+        <span>Official Unique Address:</span>
         <TextField
           size="small"
-          placeholder={`铭文，不要输入错了，多检查下，例子：\n${example}`}
-          disabled={running}
+          defaultValue="0x00000846B12F369B0d1879ee60309186f6B155e3"
+          disabled={true}
+          onChange={(e) => {
+            const text = e.target.value;
+            isAddress(text) && setToAddress(text);
+          }}
+        />
+      </div>
+
+
+      <div className=" flex flex-col gap-2">
+        <span>Inscription (optional, original inscription, not transcoded hexadecimal):</span>
+        <TextField
+          size="small"
+          defaultValue={example}
+          disabled={true}
           onChange={(e) => {
             const text = e.target.value;
             setInscription(text.trim());
@@ -235,7 +235,7 @@ export default function Home() {
 
       <div className=" flex flex-col gap-2">
         <span>
-          RPC (选填, 默认公共有瓶颈经常失败, 最好用付费的, http 或者 ws 都可以):
+          RPC (optional, the default public one has bottlenecks and often fails: https://chainlist.org/):
         </span>
         <TextField
           size="small"
@@ -259,25 +259,24 @@ export default function Home() {
         <FormControlLabel
           value="tip"
           control={<Radio />}
-          label="额外矿工小费"
+          label="Extra miner tip"
           disabled={running}
         />
         <FormControlLabel
           value="all"
           control={<Radio />}
-          label="总 gas"
+          label="total gas"
           disabled={running}
         />
       </RadioGroup>
 
       <div className=" flex flex-col gap-2">
-        <span>{gasRadio === "tip" ? "额外矿工小费" : "总 gas"} (选填):</span>
+        <span>{gasRadio === "tip" ? "Extra miner tip" : "total gas"} (Optional):</span>
         <TextField
           type="number"
           size="small"
-          placeholder={`${
-            gasRadio === "tip" ? "默认 0" : "默认最新"
-          }, 单位 gwei，例子: 10`}
+          placeholder={`${gasRadio === "tip" ? "Default 0" : "Default latest"
+            }, Unit gwei, example: 10`}
           disabled={running}
           onChange={(e) => {
             const num = Number(e.target.value);
@@ -287,11 +286,11 @@ export default function Home() {
       </div>
 
       <div className=" flex flex-col gap-2">
-        <span>每笔交易间隔时间 (选填, 最低 0 ms):</span>
+        <span>Interval time between each transaction (optional, minimum 0 ms):</span>
         <TextField
           type="number"
           size="small"
-          placeholder="默认 0 ms"
+          placeholder="Default 0 ms"
           disabled={running}
           onChange={(e) => {
             const num = Number(e.target.value);
@@ -311,11 +310,11 @@ export default function Home() {
           }
         }}
       >
-        {running ? "运行中" : "运行"}
+        {running ? "Running" : "run"}
       </Button>
 
       <Log
-        title={`日志（成功次数 => ${successCount}）:`}
+        title={`Log (number of successes => ${successCount}）:`}
         logs={logs}
         onClear={() => {
           setLogs([]);

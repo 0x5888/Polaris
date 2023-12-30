@@ -263,7 +263,7 @@ export default function Ierc() {
           <TextField
             type="number"
             size="small"
-            placeholder="cpu 核心数，例子：12"
+            placeholder="Number of cpu cores, example: 12"
             disabled={running}
             value={customCpu}
             onChange={(e) => {
@@ -275,7 +275,7 @@ export default function Ierc() {
       </div>
 
       <div className=" flex flex-col gap-2">
-        <span>RPC（选填，默认公共，http，最好用自己的）:</span>
+        <span>RPC (optional, default public, http, it is best to use your own):</span>
         <TextField
           size="small"
           placeholder="RPC"
@@ -289,12 +289,12 @@ export default function Ierc() {
 
       <div className=" flex flex-col gap-2">
         <span>
-          gas 溢价（选填，启动程序时候的 gasPrice 乘以溢价作为付出的最高 gas）:
+          gas premium (optional, the gasPrice when starting the program multiplied by the premium is the maximum gas paid):
         </span>
         <TextField
           type="number"
           size="small"
-          placeholder="默认 110 也就是 1.1 倍率，最低限制 100，例子: 110"
+          placeholder="The default is 110 which is 1.1 magnification, the minimum limit is 100, example: 110"
           disabled={running}
           onChange={(e) => {
             const num = Number(e.target.value);
@@ -316,11 +316,11 @@ export default function Ierc() {
           }
         }}
       >
-        {running ? "运行中" : "运行"}
+        {running ? "Running" : "run"}
       </Button>
 
       <Log
-        title={`日志（效率 => ${mineRate} c/s 成功次数 => ${successCount}）:`}
+        title={`log(efficiency => ${mineRate} c/s Number of successes => ${successCount}）:`}
         logs={logs}
         onClear={() => {
           setLogs([]);

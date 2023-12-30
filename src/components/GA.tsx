@@ -7,14 +7,14 @@ export function GA() {
     <>
       <Script
         async
-        src="https://www.googletagmanager.com/gtag/js?id=G-G5SLVTDBC6"
+        src=""
       />
       <Script id="ga">
         {`
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
-          gtag('config', 'G-G5SLVTDBC6');
+          gtag('config', '');
         `}
       </Script>
     </>
